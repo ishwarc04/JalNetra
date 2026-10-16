@@ -49,6 +49,17 @@ authentication and should remain bound to localhost.
 
 ## Source reference
 
+Backend workflow references imported from the original project:
+
+- [Storage management and reset APIs](docs/phase-1-reset-and-storage.md)
+- [Location search and water-body discovery](docs/phase-2-discovery.md)
+- [Water-body selection and batch import](docs/phase-3-import.md)
+- [Satellite observations and time-series architecture](docs/satellite-time-series-analysis.md)
+
+These documents describe the source project's development phases, including its
+frontend and historical validation results. They do not establish completion or
+test results for this repository. Backend verification here remains incomplete.
+
 The initial backend, migrations, storage scripts, and tests were adapted from
 [AADi2oo6/JalNetra2.O](https://github.com/AADi2oo6/JalNetra2.O), reference commit
 `47567bbdc401a043de4cb53dc097fb915e7e6b62`. Generated data, frontend build artifacts,
