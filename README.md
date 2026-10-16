@@ -1,8 +1,8 @@
 # JalNetra
 
 Backend for monitoring water bodies with Sentinel-2 satellite observations.
-This repository currently contains the FastAPI backend; a frontend has not yet
-been added here.
+This repository contains the FastAPI backend and an initial React/Vite frontend
+shell. Frontend components and monitoring pages are being imported separately.
 
 ## Backend setup (Windows PowerShell)
 
@@ -25,6 +25,27 @@ Configuration files are resolved from the repository location, regardless of the
 launch directory. The root `.env` overrides an optional `backend/.env`; process
 environment variables override both files. Unrelated `.env` files in the launch
 directory or its parent are not loaded.
+
+## Frontend setup (Windows PowerShell)
+
+From the repository root, in a separate terminal:
+
+```powershell
+Set-Location frontend
+npm ci
+Copy-Item .env.example .env
+npm run dev
+```
+
+The development server uses port 5173. `VITE_API_BASE_URL` defaults to
+`http://localhost:8000`; run the backend separately using the commands above.
+`npm run build` checks TypeScript and creates the production bundle.
+
+The frontend import is split into three commits:
+
+1. React/Vite configuration and a minimal application shell (current).
+2. Shared components and the backend API client.
+3. Monitoring pages, application navigation, and styling from the reference.
 
 ## Tests
 
@@ -65,7 +86,7 @@ These documents describe the source project's development phases, including its
 frontend and historical validation results. They do not establish completion or
 test results for this repository. Backend verification here remains incomplete.
 
-The initial backend, migrations, storage scripts, and tests were adapted from
+The initial backend, migrations, storage scripts, tests, and frontend tooling were adapted from
 [AADi2oo6/JalNetra2.O](https://github.com/AADi2oo6/JalNetra2.O), reference commit
 `47567bbdc401a043de4cb53dc097fb915e7e6b62`. Generated data, frontend build artifacts,
 credentials, and the reference repository's Git metadata are excluded.
