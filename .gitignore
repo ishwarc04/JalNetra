@@ -1,0 +1,42 @@
+# Local reference checkout; never include another repository's Git metadata.
+/.reference-jalnetra/
+
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python environments and generated files
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage*
+htmlcov/
+*.egg-info/
+
+# Runtime data, including satellite imagery and databases
+data/
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.log
+
+# Frontend dependencies and build output
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+
+# Editor and operating system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
