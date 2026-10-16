@@ -1,8 +1,11 @@
 from typing import Optional
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, Query, status, HTTPException
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
+from sqlalchemy import select
 
 from app.db.database import get_db
+from app.db.models.satellite_observation import SatelliteObservation
 from app.services.water_body_service import WaterBodyService
 from app.schemas.water_body import (
     WaterBodyCreate,
@@ -10,7 +13,11 @@ from app.schemas.water_body import (
     WaterBodyRead,
     WaterBodyListResponse,
 )
-from app.schemas.water_body_summary import WaterBodySummaryResponse
+from app.schemas.water_body_summary import (
+    WaterBodySummaryResponse,
+    WaterBodyVisualStatusResponse,
+)
+from app.services.satellite.image_resolver import ObservationImageResolver
 
 router = APIRouter(prefix="/water-bodies", tags=["Water Bodies"])
 
@@ -134,4 +141,110 @@ def get_water_body_summary(
         quality_is_remote_sensing_proxy=summary.quality_is_remote_sensing_proxy,
         has_stored_visual_image=summary.has_stored_visual_image,
         image_url=summary.image_url,
+        google_maps_url=summary.google_maps_url,
+    )
+
+
+@router.get(
+    "/{water_body_id}/visual-status",
+    response_model=WaterBodyVisualStatusResponse,
+    summary="Get visual imagery status and diagnostics for a water body",
+    description="Returns safe metadata indicating observation counts, image availability, latest dates, and file size without exposing filesystem paths.",
+)
+def get_water_body_visual_status(
+    water_body_id: str,
+    db: Session = Depends(get_db),
+) -> WaterBodyVisualStatusResponse:
+    # Verify water body exists
+    service = WaterBodyService(db)
+    wb = service.get_water_body(water_body_id)
+
+    stmt = (
+        select(SatelliteObservation)
+        .where(SatelliteObservation.water_body_id == wb.id)
+        .order_by(SatelliteObservation.sensing_date.desc())
+    )
+    obs_list = db.execute(stmt).scalars().all()
+    count = len(obs_list)
+
+    if count == 0:
+        return WaterBodyVisualStatusResponse(
+            observation_count=0,
+            latest_observation_date=None,
+            latest_observation_has_image=False,
+            latest_valid_image_date=None,
+            image_available=False,
+            image_size_bytes=None,
+        )
+
+    newest_obs = obs_list[0]
+    newest_date_str = newest_obs.sensing_date.strftime("%Y-%m-%d")
+    newest_has_img = ObservationImageResolver.resolve_visual_image(newest_obs) is not None
+
+    latest_valid = ObservationImageResolver.get_latest_visual_observation(wb.id, db)
+    if latest_valid:
+        valid_obs, valid_path = latest_valid
+        return WaterBodyVisualStatusResponse(
+            observation_count=count,
+            latest_observation_date=newest_date_str,
+            latest_observation_has_image=newest_has_img,
+            latest_valid_image_date=valid_obs.sensing_date.strftime("%Y-%m-%d"),
+            image_available=True,
+            image_size_bytes=valid_path.stat().st_size,
+        )
+    else:
+        return WaterBodyVisualStatusResponse(
+            observation_count=count,
+            latest_observation_date=newest_date_str,
+            latest_observation_has_image=False,
+            latest_valid_image_date=None,
+            image_available=False,
+            image_size_bytes=None,
+        )
+
+
+@router.get(
+    "/{water_body_id}/observations/{observation_id}/visual",
+    summary="Stream validated local visual satellite image",
+    description="Returns verified local visual image asset. Validates water body ownership, guards against path traversal, and returns supported image MIME types.",
+)
+def get_observation_visual_image(
+    water_body_id: str,
+    observation_id: str,
+    db: Session = Depends(get_db),
+):
+    stmt = (
+        select(SatelliteObservation)
+        .where(
+            SatelliteObservation.id == observation_id,
+            SatelliteObservation.water_body_id == water_body_id,
+        )
+    )
+    obs = db.execute(stmt).scalar_one_or_none()
+    if not obs:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Observation '{observation_id}' not found for water body '{water_body_id}'.",
+        )
+
+    resolved_path = ObservationImageResolver.resolve_visual_image(obs)
+    if not resolved_path:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Stored visual image file is missing or unreadable.",
+        )
+
+    suffix = resolved_path.suffix.lower()
+    media_types = {
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".png": "image/png",
+        ".webp": "image/webp",
+    }
+    media_type = media_types.get(suffix, "image/jpeg")
+
+    return FileResponse(
+        path=str(resolved_path),
+        media_type=media_type,
+        filename=f"{water_body_id}_{obs.external_scene_id}_visual{suffix}",
     )

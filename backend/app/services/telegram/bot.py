@@ -93,6 +93,8 @@ class TelegramBotService:
                         update = TelegramUpdate.model_validate(item)
                         if update.message:
                             await self.handler.handle_message(update.message)
+                        elif update.callback_query:
+                            await self.handler.handle_callback_query(update.callback_query)
                     except Exception as e:
                         logger.error("Error processing Telegram update: %s", e)
 

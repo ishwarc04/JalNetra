@@ -11,6 +11,7 @@ from app.api.v1.analysis import router as analysis_router
 from app.api.v1.spectral import router as spectral_router
 from app.api.v1.ai import router as ai_router
 from app.api.v1.telegram import router as telegram_router
+from app.api.v1.weather import router as weather_router
 
 api_v1_router = APIRouter()
 api_v1_router.include_router(health_router)
@@ -25,4 +26,5 @@ api_v1_router.include_router(analysis_router)
 api_v1_router.include_router(spectral_router)
 api_v1_router.include_router(ai_router)
 api_v1_router.include_router(telegram_router)
+api_v1_router.include_router(weather_router)
 

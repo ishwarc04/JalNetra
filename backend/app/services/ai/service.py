@@ -138,6 +138,43 @@ class AIService:
                 logger.debug("Could not attach spectral summary to AI context: %s", e)
                 context["spectral_indicators"] = []
 
+        # Attach meteorological and water-level trend context
+        try:
+            from app.services.weather import WeatherService
+            weather_svc = WeatherService(self.db)
+            weather_resp = weather_svc.get_weather_for_water_body_sync(water_body_id)
+            if weather_resp:
+                context["weather"] = {
+                    "provider": weather_resp.provider,
+                    "current": {
+                        "temperature_c": weather_resp.current.temperature_c,
+                        "apparent_temperature_c": weather_resp.current.apparent_temperature_c,
+                        "humidity_percent": weather_resp.current.humidity_percent,
+                        "precipitation_mm": weather_resp.current.precipitation_mm,
+                        "cloud_cover_percent": weather_resp.current.cloud_cover_percent,
+                        "wind_speed_kmh": weather_resp.current.wind_speed_kmh,
+                        "condition": weather_resp.current.condition,
+                    },
+                    "water_level_trend": {
+                        "trend": weather_resp.water_level_trend.trend.value,
+                        "trend_label": weather_resp.water_level_trend.trend_label,
+                        "confidence": weather_resp.water_level_trend.confidence.value,
+                        "rainfall_impact": weather_resp.water_level_trend.rainfall_impact.value,
+                        "dryness_impact": weather_resp.water_level_trend.dryness_impact.value,
+                        "forecast_rainfall_7d_mm": weather_resp.water_level_trend.forecast_rainfall_7d_mm,
+                        "rain_probability_label": weather_resp.water_level_trend.rain_probability_label,
+                        "reason": weather_resp.water_level_trend.reason,
+                        "expected_response": weather_resp.water_level_trend.expected_response,
+                        "satellite_baseline_status": weather_resp.water_level_trend.satellite_baseline_status,
+                        "disclaimer": weather_resp.water_level_trend.disclaimer,
+                    },
+                }
+            else:
+                context["weather"] = {"status": "unavailable"}
+        except Exception as e:
+            logger.debug("Could not attach weather summary to AI context: %s", e)
+            context["weather"] = {"status": "unavailable"}
+
         return context
 
     def generate_analysis_response(

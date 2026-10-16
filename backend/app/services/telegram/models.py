@@ -33,6 +33,16 @@ class TelegramMessage(BaseModel):
     text: Optional[str] = None
 
 
+class TelegramCallbackQuery(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    id: str
+    from_user: Optional[TelegramUser] = Field(None, alias="from")
+    message: Optional[TelegramMessage] = None
+    data: Optional[str] = None
+
+
 class TelegramUpdate(BaseModel):
     update_id: int
     message: Optional[TelegramMessage] = None
+    callback_query: Optional[TelegramCallbackQuery] = None

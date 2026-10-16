@@ -28,3 +28,13 @@ class WaterBodySummaryResponse(BaseModel):
     quality_is_remote_sensing_proxy: bool
     has_stored_visual_image: bool
     image_url: Optional[str] = None
+    google_maps_url: Optional[str] = None
+
+
+class WaterBodyVisualStatusResponse(BaseModel):
+    observation_count: int
+    latest_observation_date: Optional[str] = None
+    latest_observation_has_image: bool = False
+    latest_valid_image_date: Optional[str] = None
+    image_available: bool = False
+    image_size_bytes: Optional[int] = None

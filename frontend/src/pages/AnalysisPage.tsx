@@ -21,6 +21,7 @@ import {
   AIAnalysisResponse,
 } from '../api/client';
 import { FetchVisualDataModal } from '../components/FetchVisualDataModal';
+import { WeatherSection } from '../components/WeatherSection';
 
 interface AnalysisPageProps {
   initialWaterBodyId?: string;
@@ -1347,6 +1348,14 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
           </div>
         )}
 
+        {/* ── Weather & Water Forecast Section ──────────────────────── */}
+        {selectedWaterBodyId && (
+          <WeatherSection
+            waterBodyId={selectedWaterBodyId}
+            waterBodyName={selectedWaterBody?.name}
+          />
+        )}
+
         {/* ── Section 5: Remote-Sensing Water Quality Indicators ────── */}
         <div style={styles.sectionCard}>
           <div style={styles.sectionHeader}>
@@ -1902,6 +1911,22 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
                 onClick={() => handleAskAi('Explain spectral indicators')}
               >
                 [ Explain spectral indicators ]
+              </button>
+              <button
+                style={{
+                  ...styles.quickNavBtn,
+                  backgroundColor: '#f0fdf4',
+                  borderColor: '#86efac',
+                  color: '#166534',
+                  fontWeight: 700,
+                  padding: '0.35rem 0.65rem',
+                  fontSize: '0.72rem',
+                  cursor: (isAiLoading || !selectedWaterBodyId) ? 'not-allowed' : 'pointer',
+                }}
+                disabled={isAiLoading || !selectedWaterBodyId}
+                onClick={() => handleAskAi('Analyze current weather conditions, forecast rainfall, and the projected water-level trend for this water body.')}
+              >
+                [ 🌤 Weather &amp; Water Trend ]
               </button>
             </div>
           </div>

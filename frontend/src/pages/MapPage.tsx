@@ -41,6 +41,7 @@ import {
   WaterBody,
 } from '../api/client';
 import { FetchVisualDataModal } from '../components/FetchVisualDataModal';
+import { CompactWeatherBadge } from '../components/CompactWeatherBadge';
 
 // ─── LocalStorage helpers ─────────────────────────────────────────────────────
 const LS_WB_KEY = 'jalnetra_selected_wb_id';
@@ -1884,6 +1885,11 @@ export const MapPage: React.FC<MapPageProps> = ({ onNavigateToAnalysis }) => {
                       <button style={styles.refocusBtn} onClick={handleFocusToWaterBody}>
                         FOCUS MAP TO WATER BODY
                       </button>
+
+                      <CompactWeatherBadge
+                        waterBodyId={selectedWaterBodyId}
+                        onNavigateToAnalysis={onNavigateToAnalysis}
+                      />
 
                       <div style={styles.wbActionGroup}>
                         <button

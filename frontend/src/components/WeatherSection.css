@@ -1,0 +1,592 @@
+/* ─── JalNetra 2.0 Weather & Water Forecast Dashboard Styles ─── */
+
+.jn-weather-dashboard {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #0f172a;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.jn-weather-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e2e8f0;
+  background-color: #f8fafc;
+  gap: 0.75rem;
+}
+
+.jn-weather-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.jn-weather-kicker {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0284c7;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.jn-weather-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.jn-weather-meta {
+  font-size: 0.72rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.jn-weather-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.jn-provider-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background-color: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+  padding: 0.2rem 0.55rem;
+  border-radius: 2px;
+}
+
+.jn-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background-color: #ffffff;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  padding: 0.35rem 0.75rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.jn-refresh-btn:hover:not(:disabled) {
+  background-color: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.jn-refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ─── Main Content Grid ─── */
+.jn-weather-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ─── Top Row: Current Weather + Trend Signal ─── */
+.jn-top-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .jn-top-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Current Weather Card */
+.jn-card {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 2px;
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.jn-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.jn-card-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+}
+
+.jn-current-display {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.jn-current-temp {
+  font-size: 2.35rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.jn-current-condition {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #334155;
+  margin-top: 0.2rem;
+}
+
+.jn-current-feels {
+  font-size: 0.72rem;
+  color: #64748b;
+  margin-top: 0.15rem;
+}
+
+.jn-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 0.85rem;
+}
+
+.jn-metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.jn-metric-label {
+  font-size: 0.68rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.jn-metric-value {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0f172a;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* ─── Trend Signal Card ─── */
+.jn-trend-card {
+  border-radius: 2px;
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  border: 1px solid #cbd5e1;
+}
+
+.jn-trend-rising {
+  background-color: #f0fdf4;
+  border-color: #86efac;
+}
+
+.jn-trend-falling {
+  background-color: #fffbeb;
+  border-color: #fde68a;
+}
+
+.jn-trend-stable {
+  background-color: #f0f9ff;
+  border-color: #bae6fd;
+}
+
+.jn-trend-unknown {
+  background-color: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+.jn-trend-hero {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.jn-trend-arrow-box {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 900;
+  border-radius: 2px;
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.jn-trend-status-title {
+  font-size: 1.15rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.jn-trend-status-sub {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.jn-trend-factors-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 0.75rem;
+  border-radius: 2px;
+}
+
+@media (max-width: 600px) {
+  .jn-trend-factors-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.jn-trend-reason {
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: #1e293b;
+  margin-bottom: 0.6rem;
+  font-weight: 500;
+}
+
+.jn-trend-disclaimer {
+  font-size: 0.65rem;
+  color: #64748b;
+  font-style: italic;
+  border-top: 1px dashed rgba(0, 0, 0, 0.1);
+  padding-top: 0.4rem;
+}
+
+/* ─── 7-Day Forecast Section ─── */
+.jn-section-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
+}
+
+.jn-section-title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.jn-section-hint {
+  font-size: 0.68rem;
+  color: #94a3b8;
+}
+
+.jn-forecast-scroll-container {
+  overflow-x: auto;
+  padding-bottom: 0.4rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.jn-forecast-strip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(130px, 1fr));
+  gap: 0.65rem;
+  min-width: 910px;
+}
+
+.jn-forecast-card {
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 2px;
+  padding: 0.75rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+  transition: all 0.15s ease-in-out;
+}
+
+.jn-forecast-card:hover {
+  background-color: #ffffff;
+  border-color: #94a3b8;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.jn-forecast-card.is-today {
+  background-color: #f0fdf4;
+  border-color: #86efac;
+  border-width: 2px;
+  box-shadow: 0 1px 4px rgba(22, 101, 52, 0.08);
+}
+
+.jn-forecast-day-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #0f172a;
+  margin-bottom: 0.15rem;
+}
+
+.jn-forecast-date-sub {
+  font-size: 0.65rem;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.jn-forecast-icon-wrapper {
+  margin: 0.35rem 0;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.jn-forecast-condition {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.4rem;
+  min-height: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.jn-forecast-temps {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 0.4rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.jn-forecast-temp-min {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.jn-forecast-rain-pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 2px;
+  margin-top: 0.2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.jn-forecast-rain-has {
+  background-color: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+.jn-forecast-rain-none {
+  background-color: #f1f5f9;
+  color: #94a3b8;
+  border: 1px solid #e2e8f0;
+}
+
+.jn-forecast-prob {
+  font-size: 0.65rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+/* ─── Rainfall Chart Section ─── */
+.jn-chart-panel {
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 2px;
+  padding: 1.15rem;
+  box-sizing: border-box;
+}
+
+.jn-chart-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.jn-chart-summary-stats {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.jn-chart-stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.jn-chart-stat-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.04em;
+}
+
+.jn-chart-stat-val {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0f172a;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.jn-chart-svg-container {
+  width: 100%;
+  height: 180px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 2px;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+/* Zero state rainfall banner */
+.jn-zero-rain-banner {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  margin-top: 0.65rem;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ─── Environmental Impact & Baseline Flow ─── */
+.jn-impact-flow-panel {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .jn-impact-flow-panel {
+    grid-template-columns: 1fr;
+  }
+}
+
+.jn-flow-steps-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+}
+
+@media (max-width: 650px) {
+  .jn-flow-steps-container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.jn-flow-step {
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  padding: 0.65rem;
+  border-radius: 2px;
+  text-align: center;
+  position: relative;
+}
+
+.jn-flow-step-num {
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: #0284c7;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+
+.jn-flow-step-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.jn-flow-step-desc {
+  font-size: 0.65rem;
+  color: #64748b;
+  margin-top: 0.2rem;
+}
+
+/* Satellite Baseline Box */
+.jn-baseline-card {
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  padding: 0.85rem;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Bottom Human-Readable Summary */
+.jn-summary-callout {
+  background-color: #f1f5f9;
+  border-left: 3px solid #0284c7;
+  padding: 0.75rem 1rem;
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: #334155;
+  border-radius: 0 2px 2px 0;
+}

@@ -12,6 +12,7 @@ from app.db.repositories.satellite_observation_repository import SatelliteObserv
 from app.services.spectral.service import SpectralAnalysisService
 from app.services.water_quality_summary_service import WaterQualitySummaryService, WaterQualitySummary
 from app.services.water_body_service import WaterBodyNotFoundError
+from app.services.satellite.image_resolver import ObservationImageResolver
 
 
 @dataclass
@@ -38,6 +39,7 @@ class WaterBodyTelegramSummary:
     has_stored_visual_image: bool
     latest_image_path: Optional[str] = None  # Internal backend filesystem path only
     image_url: Optional[str] = None
+    google_maps_url: Optional[str] = None
 
 
 class WaterBodySummaryService:
@@ -48,7 +50,7 @@ class WaterBodySummaryService:
 
     def __init__(self, db: Session, data_dir: Optional[Path] = None):
         self.db = db
-        self.data_dir = data_dir or Path(settings.DATA_DIR)
+        self.data_dir = data_dir or settings.resolved_data_dir
         self.wb_repo = WaterBodyRepository(db)
         self.obs_repo = SatelliteObservationRepository(db)
 
@@ -165,25 +167,9 @@ class WaterBodySummaryService:
         Finds the newest observation for a water body that has an existing local visual image on disk.
         Returns (observation, absolute_path_to_image) or None.
         """
-        obs_list = self.obs_repo.list_for_water_body(water_body_id)
-        # Sort newest first
-        obs_list.sort(key=lambda o: o.sensing_date, reverse=True)
-
-        for obs in obs_list:
-            if not obs.local_visual_path:
-                continue
-            # Security: ensure no traversal
-            rel_path = Path(obs.local_visual_path)
-            if ".." in rel_path.parts:
-                continue
-            full_path = (self.data_dir / rel_path).resolve()
-            # Ensure path is inside data_dir
-            if not str(full_path).startswith(str(self.data_dir.resolve())):
-                continue
-            if full_path.exists() and full_path.is_file():
-                return (obs, full_path)
-
-        return None
+        return ObservationImageResolver.get_latest_visual_observation(
+            water_body_id, self.db, data_dir=self.data_dir
+        )
 
     def get_water_body_summary(self, water_body_id: str) -> WaterBodyTelegramSummary:
         """Assembles a full summary for a water body from the database and storage."""
@@ -199,6 +185,11 @@ class WaterBodySummaryService:
             location_str = f"{wb.centroid_lat:.2f}°N, {wb.centroid_lon:.2f}°E"
         else:
             location_str = "Location unspecified"
+
+        # Google Maps URL
+        google_maps_url = None
+        if wb.centroid_lat is not None and wb.centroid_lon is not None:
+            google_maps_url = f"https://www.google.com/maps/search/?api=1&query={wb.centroid_lat},{wb.centroid_lon}"
 
         # 2. Surface area
         if wb.area_sq_km and wb.area_sq_km > 0:
@@ -277,6 +268,7 @@ class WaterBodySummaryService:
             has_stored_visual_image=has_stored_image,
             latest_image_path=image_path,
             image_url=image_url,
+            google_maps_url=google_maps_url,
         )
 
     @staticmethod
@@ -287,13 +279,23 @@ class WaterBodySummaryService:
             "",
             "📍 Location",
             s.location,
+        ]
+
+        if s.google_maps_url:
+            lines.extend([
+                "",
+                "🗺 Location",
+                f"[Open in Google Maps]({s.google_maps_url})",
+            ])
+
+        lines.extend([
             "",
             "📐 Surface Area",
             s.surface_area_text,
             "",
             "💧 Estimated Water Volume",
             s.water_volume,
-        ]
+        ])
 
         if s.water_volume_note:
             lines.append(s.water_volume_note)
@@ -327,11 +329,21 @@ class WaterBodySummaryService:
         ])
 
         if not s.has_stored_visual_image:
-            lines.extend([
-                "",
-                "🛰 Latest Visual",
-                "No stored visual image is currently available for this water body.",
-                "Use the JalNetra application to fetch visual observations first.",
-            ])
+            if s.observation_count > 0:
+                lines.extend([
+                    "",
+                    "🛰 Latest Visual",
+                    "Observation exists, image unavailable.",
+                    "",
+                    f"Available observations: {s.observation_count}",
+                    "The latest observation does not currently have a readable visual file.",
+                ])
+            else:
+                lines.extend([
+                    "",
+                    "🛰 Latest Visual",
+                    "No visual observations have been fetched yet.",
+                    "Use the JalNetra application to fetch visual observations first.",
+                ])
 
         return "\n".join(lines)
