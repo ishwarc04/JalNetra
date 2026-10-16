@@ -1,15 +1,56 @@
+@import 'leaflet/dist/leaflet.css';
+
 :root {
-  font-family: system-ui, sans-serif;
-  color: #163047;
-  background: #f2f7fa;
+  /* Official Environmental Monitoring Theme Tokens */
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-subtle: #f1f5f9;
+
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748b;
+
+  /* Primary Green (Environmental / Jal) */
+  --color-primary: #15803d;
+  --color-primary-dark: #166534;
+  --color-primary-light: #22c55e;
+  --color-primary-subtle: #f0fdf4;
+
+  /* Accent Orange (Alert / Station) */
+  --color-accent: #c2410c;
+  --color-accent-light: #ea580c;
+  --color-accent-subtle: #fff7ed;
+
+  /* Status Colors */
+  --color-status-success: #15803d;
+  --color-status-danger: #b91c1c;
+  --color-status-offline: #dc2626;
+
+  /* Structural Borders - Sharp, square corners */
+  --border-color: #cbd5e1;
+  --border-color-strong: #94a3b8;
+  --border-radius: 0px; /* Strictly sharp corners */
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border-radius: var(--border-radius);
 }
 
 body {
-  margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
-main {
-  max-width: 72rem;
-  margin: 0 auto;
-  padding: 3rem 1.5rem;
+a {
+  color: inherit;
+  text-decoration: none;
 }

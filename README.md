@@ -1,9 +1,9 @@
 # JalNetra
 
 Backend for monitoring water bodies with Sentinel-2 satellite observations.
-This repository contains the FastAPI backend, an initial React/Vite frontend
-shell, shared components, and the backend API client. Monitoring pages will be
-connected in the final frontend import step.
+This repository contains the FastAPI backend and the React/Vite frontend with
+shared components, an API client, monitoring pages, navigation, and styling
+imported from the reference project.
 
 ## Backend setup (Windows PowerShell)
 
@@ -45,8 +45,12 @@ The development server uses port 5173. `VITE_API_BASE_URL` defaults to
 The frontend import is split into three commits:
 
 1. React/Vite configuration and a minimal application shell (imported).
-2. Shared components and the backend API client (imported; pages connect next).
-3. Monitoring pages, application navigation, and styling from the reference.
+2. Shared components and the backend API client (imported).
+3. Monitoring pages, application navigation, and styling (imported).
+
+The frontend includes the dashboard, discovery, satellite scenes, monitoring
+map, and time-series analysis pages. The source import is complete; a production
+build and end-to-end verification have not yet been performed in this repository.
 
 ## Tests
 
@@ -87,8 +91,7 @@ These documents describe the source project's development phases, including its
 frontend and historical validation results. They do not establish completion or
 test results for this repository. Backend verification here remains incomplete.
 
-The initial backend, migrations, storage scripts, tests, frontend tooling,
-shared components, and API client were adapted from
+The initial backend, migrations, storage scripts, tests, and frontend were adapted from
 [AADi2oo6/JalNetra2.O](https://github.com/AADi2oo6/JalNetra2.O), reference commit
 `47567bbdc401a043de4cb53dc097fb915e7e6b62`. Generated data, frontend build artifacts,
 credentials, and the reference repository's Git metadata are excluded.
