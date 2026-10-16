@@ -1,6 +1,5 @@
 from pathlib import Path
 from typing import List
-from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from app.core.paths import get_repo_root, resolve_path
 
@@ -53,7 +52,9 @@ class Settings(BaseSettings):
     WATER_BODY_MAP_PADDING_PERCENT: float = 10.0
 
     model_config = SettingsConfigDict(
-        env_file=(".env", "../.env"),
+        # Keep configuration independent of the process working directory.
+        # Repository settings override the optional backend-local file.
+        env_file=(get_repo_root() / "backend" / ".env", get_repo_root() / ".env"),
         env_file_encoding="utf-8",
         extra="ignore",
     )

@@ -21,6 +21,11 @@ Open `http://127.0.0.1:8000/docs` for the API documentation. Database migrations
 must run before using catalog endpoints. Storage directories are created at
 runtime under the repository's `data/` directory.
 
+Configuration files are resolved from the repository location, regardless of the
+launch directory. The root `.env` overrides an optional `backend/.env`; process
+environment variables override both files. Unrelated `.env` files in the launch
+directory or its parent are not loaded.
+
 ## Tests
 
 From `backend/`:
